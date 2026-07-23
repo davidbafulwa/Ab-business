@@ -1,0 +1,43 @@
+name: Test PHP Project
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: ['7.4', '8.0', '8.1']
+    
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v3
+      
+      - name: Installer PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, fileinfo
+      
+      - name: Afficher la version PHP
+        run: php -v
+      
+      - name: Vérifier la syntaxe PHP dans excellentbusiness/
+        run: |
+          echo "🔍 Vérification de la syntaxe PHP..."
+          php -l excellentbusiness/index.php
+          php -l excellentbusiness/accueil.php
+          php -l excellentbusiness/logout.php
+      
+      - name: Lister les fichiers du projet
+        run: |
+          echo "📁 Fichiers du projet :"
+          ls -la excellentbusiness/
+      
+      - name: ✅ Tests terminés avec succès !
+        run: echo "🎉 Tous les tests sont passés !"
